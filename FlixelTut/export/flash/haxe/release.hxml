@@ -8,14 +8,13 @@
 -cp source
 -D lime-openal
 -D tools=2.0.0-beta
--D FLX_NO_DEBUG
 -D flash-use-stage
 -D no-compilation
 -D lime-opengl
--D NAPE_RELEASE_BUILD
 -D openfl-flash
 -D FLX_RENDER_BLIT
 -D lime-curl
+-D fdb
 -D web
 -swf-lib export/flash/obj/assets.swf
 -swf-version 11.8
