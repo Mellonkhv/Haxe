@@ -1,9 +1,11 @@
 -main ApplicationMain 
--cp d:/Haxetoolkit/haxe/lib/flixel/3,3,5
--D flixel=3.3.5
--cp d:/Haxetoolkit/haxe/lib/openfl/2,1,5
+-cp C:/Program Files (x86)/FlashDevelop/Tools/Haxe/haxe/lib/flixel-addons/1,1,0
+-D flixel-addons=1.1.0
+-cp C:/Program Files (x86)/FlashDevelop/Tools/Haxe/haxe/lib/openfl/2,1,5
 -D openfl=2.1.5
--cp d:/Haxetoolkit/haxe/lib/lime/2,0,0-beta
+-cp C:/Program Files (x86)/FlashDevelop/Tools/Haxe/haxe/lib/flixel/3,3,5
+-D flixel=3.3.5
+-cp C:/Program Files (x86)/FlashDevelop/Tools/Haxe/haxe/lib/lime/2,0,0-beta
 -D lime=2.0.0-beta
 -cp source
 -D lime-openal

@@ -31,11 +31,23 @@ class ApplicationMain {
 		types.push (AssetType.TEXT);
 		
 		
+		urls.push ("assets/data/FlixelTut.oep");
+		types.push (AssetType.TEXT);
+		
+		
+		urls.push ("assets/data/room-001.oel");
+		types.push (AssetType.TEXT);
+		
+		
 		urls.push ("assets/images/images-go-here.txt");
 		types.push (AssetType.TEXT);
 		
 		
 		urls.push ("assets/images/player.png");
+		types.push (AssetType.IMAGE);
+		
+		
+		urls.push ("assets/images/tiles.png");
 		types.push (AssetType.IMAGE);
 		
 		
