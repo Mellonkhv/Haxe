@@ -22,11 +22,11 @@ class Player extends FlxSprite
 	 * @param	X
 	 * @param	Y
 	 */
-	public function new(X:Float=0, Y:Float=0) 
+	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y);
 		// Визуальная честь объекта
-		loadGraphic(AssetPaths.player__png, true, 16, 16);
+		loadGraphic("assets/images/player.png", true, 16, 16);
 		
 		// переворачиваем спрайт при движени в противоположном направлении
 		setFacingFlip(FlxObject.LEFT, false, false);
@@ -40,9 +40,33 @@ class Player extends FlxSprite
 		// Drag тормозит объект недаёт ему начать бесконечно двигаться 
 		drag.x = drag.y = 1600;
 		
-		setSize(8, 14);
-		offset.set(4, 2);
+		width = 8;
+		height = 14;
+		offset.x = 4;
+		offset.y = 2;
 	}
+	
+	/**
+	 * Рисование анимации по нажатию клавишь
+	 */
+	override public function draw():Void 
+	{
+		if (velocity.x != 0 || velocity.y != 0) //&& touching == FlxObject.NONE)
+			{
+				switch(facing)
+				{
+					case FlxObject.LEFT, FlxObject.RIGHT:
+						animation.play("lr");
+					case FlxObject.UP:
+						animation.play("u");
+					case FlxObject.DOWN:
+						animation.play("d");
+				}
+			}
+		
+		super.draw();
+	}
+	
 	/**
 	 * Метод наблюдает за тем какие клавиши нажимает игрок и двигает спрайт в заданом направлении
 	 */
@@ -61,16 +85,14 @@ class Player extends FlxSprite
 		_right = FlxG.keys.anyPressed(["RIGHT", "D"]);
 		
 		// Запрещаем движение в противоположных направлениях
-		if (_up && _down) _up = _down = false;
-		if (_left && _right) _left = _right = false;
+		if (_up && _down) 
+			_up = _down = false;
+		if (_left && _right) 
+			_left = _right = false;
 		
 		// Проверяем куда игрок фактически двигается
 		if (_up || _down || _left || _right)
 		{
-			// Диагональное движение
-			//velocity.x = speed;
-			//velocity.y = speed;
-			
 			// Угл движения в зависимости от нажатой клавиши
 			var mA:Float = 0; // временная переменная угла
 			if (_up) // игрок нажал вверх
@@ -101,18 +123,7 @@ class Player extends FlxSprite
 			// Что-то про угловую скорость плохо понят
 			FlxAngle.rotatePoint(speed, 0, 0, 0, mA, velocity);
 			
-			if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
-			{
-				switch(facing)
-				{
-					case FlxObject.LEFT, FlxObject.RIGHT:
-						animation.play("lr");
-					case FlxObject.UP:
-						animation.play("u");
-					case FlxObject.DOWN:
-						animation.play("d");
-				}
-			}
+			
 		}
 	}
 	/**

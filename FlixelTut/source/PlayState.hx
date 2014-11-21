@@ -19,9 +19,9 @@ class PlayState extends FlxState
 	/**
 	 * Приватные переменные
 	 */
-	private var _player:Player;
-	private var _map:FlxOgmoLoader;
-	private var _mWalls:FlxTilemap;
+	private var _player:Player; // Игрок
+	private var _map:FlxOgmoLoader; // Карта
+	private var _mWalls:FlxTilemap; // Стены
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -29,10 +29,10 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		// Дабавляем карту
-		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "wall");
+		_map = new FlxOgmoLoader("assets/data/room-001.oel");
+		_mWalls = _map.loadTilemap("assets/images/tiles.png", 16, 16, "walls");
 		_mWalls.setTileProperties(1, FlxObject.NONE);
-		_mWalls.setTileProperties(2, FlxObject.WALL);
+		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
 		// Добавляем игрока
@@ -44,13 +44,10 @@ class PlayState extends FlxState
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void 
 	{
-		var x:Int = Std.parseInt(entityData.get("x"));
-		var y:Int = Std.parseInt(entityData.get("y"));
-		
 		if (entityName == "player")
 		{
-			_player.x = x;
-			_player.y = y;
+			_player.x = Std.parseInt(entityData.get("x"));
+			_player.y = Std.parseInt(entityData.get("y"));
 		}
 	}
 	
@@ -68,7 +65,8 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
-		FlxG.collide(_player, _mWalls);
 		super.update();
+		
+		FlxG.collide(_player, _mWalls);
 	}	
 }
