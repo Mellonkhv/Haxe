@@ -1,10 +1,12 @@
 package;
 
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
@@ -22,6 +24,7 @@ class PlayState extends FlxState
 	private var _player:Player; // Игрок
 	private var _map:FlxOgmoLoader; // Карта
 	private var _mWalls:FlxTilemap; // Стены
+	private var _grpCoins:FlxTypedGroup<Coin>;// монетки
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -39,15 +42,28 @@ class PlayState extends FlxState
 		_player = new Player();
 		_map.loadEntities(placeEntities, "entities");
 		add(_player);
+		
+		// Добавляем монетку
+		_grpCoins = new FlxTypedGroup<Coin>();
+		add(_grpCoins);
+		
+		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, null, 1);
+		
 		super.create();
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void 
 	{
+		var x:Int = Std.parseInt(entityData.get("x"));
+		var y:Int = Std.parseInt(entityData.get("y"));
 		if (entityName == "player")
 		{
-			_player.x = Std.parseInt(entityData.get("x"));
-			_player.y = Std.parseInt(entityData.get("y"));
+			_player.x = x;
+			_player.y = y;
+		}
+		else if (entityName == "coin")
+		{
+			_grpCoins.add(new Coin(Std.parseInt(entityData.get("x")) + 4, Std.parseInt(entityData.get("y")) + 4));
 		}
 	}
 	
@@ -68,5 +84,14 @@ class PlayState extends FlxState
 		super.update();
 		
 		FlxG.collide(_player, _mWalls);
+		FlxG.overlap(_player, _grpCoins, playerTouchCoin);
 	}	
+	
+	private function playerTouchCoin(P:Player, C:Coin):Void 
+	{
+		if ( P.alive && P.exists && C.alive && C.exists)
+		{
+			C.kill();
+		}
+	}
 }
