@@ -38,14 +38,15 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
+		// Добавляем монетку
+		_grpCoins = new FlxTypedGroup<Coin>();
+		add(_grpCoins);
+		
 		// Добавляем игрока
 		_player = new Player();
 		_map.loadEntities(placeEntities, "entities");
 		add(_player);
 		
-		// Добавляем монетку
-		_grpCoins = new FlxTypedGroup<Coin>();
-		add(_grpCoins);
 		
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, null, 1);
 		
