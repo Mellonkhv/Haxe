@@ -93,7 +93,24 @@ class PlayState extends FlxState
 		
 		FlxG.collide(_player, _mWalls);
 		FlxG.overlap(_player, _grpCoins, playerTouchCoin);
+		
+		FlxG.collide(_grpEnemies, _mWalls);
+		checkEnemyVision();
 	}	
+	
+	private function checkEnemyVision():Void
+	{
+		for (e in _grpEnemies.members)
+		{
+			if (_mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
+			{
+				e.seesPlayer = true;
+				e.playerPos.copyFrom(_player.getMidpoint());
+			}
+			else
+				e.seesPlayer = false;
+		}
+	}
 	
 	private function playerTouchCoin(P:Player, C:Coin):Void 
 	{

@@ -5,6 +5,9 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
+import flixel.util.FlxVelocity;
 
 /**
  * ...
@@ -17,6 +20,15 @@ class Enemy extends FlxSprite
 	 */
 	public var speed:Float = 140;
 	public var etype(default, null):Int;
+	public var seesPlayer:Bool = false;
+	public var playerPos(default, null):FlxPoint;
+	
+	/**
+	 * Приватные переменные
+	 */
+	private var _brain:FSM;
+	private var _idleTmr:Float;
+	private var _moveDir:Float;
 	
 	/**
 	 * Конструктор класса Player с координатами
@@ -40,6 +52,10 @@ class Enemy extends FlxSprite
 		animation.add("u", [6, 7, 6, 8], 6, false);
 		animation.add("d", [0, 1, 0, 2], 6, false);
 		
+		_brain = new FSM(idle);
+		_idleTmr = 0;
+		playerPos = FlxPoint.get();
+		
 		// Drag тормозит объект недаёт ему начать бесконечно двигаться 
 		drag.x = drag.y = 10;
 		
@@ -47,6 +63,42 @@ class Enemy extends FlxSprite
 		height = 14;
 		offset.x = 4;
 		offset.y = 2;
+	}
+	
+	private function idle():Void
+	{
+		if (seesPlayer)
+		{
+			_brain.activeState = chase;
+		}
+		else if (_idleTmr <= 0)
+		{
+			if (FlxRandom.chanceRoll(1))
+			{
+				_moveDir = -1;
+				velocity.x = velocity.y = 0;
+			}
+			else
+			{
+				_moveDir = FlxRandom.intRanged(0, 8) * 45;
+				FlxAngle.rotatePoint(speed * .5, 0, 0, 0, _moveDir, velocity);
+			}
+			_idleTmr = FlxRandom.intRanged(1, 4);
+		}
+		else
+			_idleTmr -= FlxG.elapsed;
+	}
+	
+	public function chase():Void
+	{
+		if (!seesPlayer)
+		{
+			_brain.activeState = idle;
+		}
+		else
+		{
+			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(speed));
+		}
 	}
 	
 	/**
@@ -86,9 +138,19 @@ class Enemy extends FlxSprite
 	}
 	
 	/**
+	 * Медод обновления вызывающий метод movment
+	 */
+	override public function update():Void 
+	{
+		//movement();
+		_brain.update();
+		super.update();
+	}
+	
+	/**
 	 * Метод наблюдает за тем какие клавиши нажимает игрок и двигает спрайт в заданом направлении
 	 */
-	private function movement():Void
+	/*private function movement():Void
 	{
 		// Переменные направления движения
 		var _up:Bool = false;
@@ -143,14 +205,7 @@ class Enemy extends FlxSprite
 			
 			
 		}
-	}
-	/**
-	 * Медод обновления вызывающий метод movment
-	 */
-	override public function update():Void 
-	{
-		movement();
-		super.update();
-	}
+	}*/
+	
 	
 }
