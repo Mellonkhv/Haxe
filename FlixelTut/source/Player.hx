@@ -7,7 +7,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 
 /**
- * ...
+ * Класс игрока
  * @author Mellonkhv
  */
 class Player extends FlxSprite
