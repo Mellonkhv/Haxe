@@ -39,7 +39,7 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
-		// Добавляем монетку
+		// Добавляем монетки в игру
 		_grpCoins = new FlxTypedGroup<Coin>();
 		add(_grpCoins);
 		
@@ -52,8 +52,11 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entities");
 		add(_player);
 		
-		
-		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, null, 1);
+		/**
+		 * Заставляем камеру приследовать игрока, но прадварительно изменяем в классе Main значения 
+		 * gameWidth = 320, gameHeight = 240 и zoom = 2
+		 */
+		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, null, 1); 
 		
 		super.create();
 	}
@@ -67,11 +70,13 @@ class PlayState extends FlxState
 		}
 		else if (entityName == "coin")
 		{
+			// расставляем монетки по карте
 			_grpCoins.add(new Coin(Std.parseInt(entityData.get("x")) + 4, Std.parseInt(entityData.get("y")) + 4));
 		}
 		else if (entityName == "enemy")
 		{
-			_grpEnemies.add(new Enemy(Std.parseInt(entityData.get("x")) + 4, Std.parseInt(entityData.get("y")), Std.parseInt(entityData.get("etype"))));
+			// Раставление врагов по карте
+			_grpEnemies.add(new Enemy(Std.parseInt(entityData.get("x")) + 4, Std.parseInt(entityData.get("y")), Std.parseInt(entityData.get("etype")))); 
 		}
 	}
 	
@@ -91,17 +96,22 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		FlxG.collide(_player, _mWalls);
-		FlxG.overlap(_player, _grpCoins, playerTouchCoin);
+		FlxG.collide(_player, _mWalls); // Упираемся в стены
+		FlxG.overlap(_player, _grpCoins, playerTouchCoin); // Собираем монетки
 		
-		FlxG.collide(_grpEnemies, _mWalls);
-		checkEnemyVision();
+		FlxG.collide(_grpEnemies, _mWalls); // Враги упираются в стены
+		checkEnemyVision(); // Проврка видимости врагами
 	}	
 	
+	/**
+	 * Зрение врагов
+	 */
 	private function checkEnemyVision():Void
 	{
+		// Пеебираем врагов
 		for (e in _grpEnemies.members)
 		{
+			// Враги смотрят на игрока если взгляд не сталкивается со стеной возвращается "true"
 			if (_mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
 			{
 				e.seesPlayer = true;
@@ -112,11 +122,14 @@ class PlayState extends FlxState
 		}
 	}
 	
+	/**
+	 * Игрок коснулся монетки
+	 */
 	private function playerTouchCoin(P:Player, C:Coin):Void 
 	{
-		if ( P.alive && P.exists && C.alive && C.exists)
+		if ( P.alive && P.exists && C.alive && C.exists) // Если игрок и монетка соприкоснулись
 		{
-			C.kill();
+			C.kill(); // монетка исчезает
 		}
 	}
 }

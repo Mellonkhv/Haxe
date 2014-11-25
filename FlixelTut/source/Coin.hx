@@ -5,7 +5,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 /**
- * ...
+ * Класс монеток
  * @author Mellonkhv
  */
 class Coin extends FlxSprite
@@ -19,12 +19,15 @@ class Coin extends FlxSprite
 	
 	override public function kill():Void 
 	{
+		// Поменяем статус на "не живая" :)
 		alive = false;
-		FlxTween.tween(this, { alpha:0, y:y - 16 }, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, complete:finishKill } );
+		// Когда монетка подобрана она подпрыгивает и растворяется
+		FlxTween.tween(this, { alpha:0, y:y - 16 }, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, complete:finishKill } ); 
 	}
 	
 	private function finishKill(T:FlxTween):Void
 	{
+		// Монетка больше не существует
 		exists = false;
 	}
 }
