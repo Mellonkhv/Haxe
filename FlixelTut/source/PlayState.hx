@@ -26,6 +26,9 @@ class PlayState extends FlxState
 	private var _mWalls:FlxTilemap; // Стены
 	private var _grpCoins:FlxTypedGroup<Coin>;// монетки
 	private var _grpEnemies:FlxTypedGroup<Enemy>;// враги
+	private var _hud:HUD;
+	private var _money:Int = 0;
+	private var _health:Int = 3;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -57,6 +60,10 @@ class PlayState extends FlxState
 		 * gameWidth = 320, gameHeight = 240 и zoom = 2
 		 */
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, null, 1); 
+		
+		// Добавляем интерфейс
+		_hud = new HUD();
+		add(_hud);
 		
 		super.create();
 	}
@@ -129,6 +136,8 @@ class PlayState extends FlxState
 	{
 		if ( P.alive && P.exists && C.alive && C.exists) // Если игрок и монетка соприкоснулись
 		{
+			_money ++; // считаем собраную монетку
+			_hud.updateHUD(_health, _money); // обновляем цифры
 			C.kill(); // монетка исчезает
 		}
 	}
