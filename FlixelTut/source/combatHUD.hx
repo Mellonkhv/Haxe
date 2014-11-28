@@ -60,6 +60,48 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	{
 		super();
 		
+		// Рисуем чёрный фон с белым кантом
+		_sprBack = new FlxSprite().makeGraphic(120, 120, FlxColor.WHITE);
+		_sprBack.drawRect(1, 1, 118, 44, FlxColor.BLACK);
+		_sprBack.drawRect(1, 46, 118, 73, FlxColor.BLACK);
+		_sprBack.screenCenter(true, true);
+		add(_sprBack);
+		
+		// Добавим "пустышку" игрока который не может двигаться
+		_sprPlayer = new Player(_sprBack.x +36, _sprPlayer.y + 16);
+		_sprPlayer.animation.frameIndex = 3;
+		_sprPlayer.active = false;
+		_sprPlayer.facing = FlxObject.RIGHT;
+		add(_sprPlayer);
+		
+		// Пустышка врага
+		_sprEnemy = new Enemy(_sprBack.x + 76, _sprBack.y + 16, 0);
+		_sprEnemy.animation.frameIndex = 3;
+		_sprEnemy.active = false;
+		_sprEnemy.facing = FlxObject.LEFT;
+		add(_sprEnemy);
+		
+		// Настройка отображения здоровья игрока
+		_txtPlayerHealth = new FlxText(0, _sprPlayer.y + _sprPlayer.height + 2, 0, "3 / 3", 8);
+		_txtPlayerHealth.alignment = "center";
+		_txtPlayerHealth.x = _sprPlayer.x + 4 - (_txtPlayerHealth.width / 2);
+		add(_txtPlayerHealth);
+		
+		// Создание и добавление FlxBar для отображения здоровья противника. Мы будем делать это красным и желтым.
+		_enemyHealthBar = new FlxBar(_sprEnemy.x - 6, _txtPlayerHealth.y, FlxBar.FILL_LEFT_TO_RIGHT, 20, 20);
+		_enemyHealthBar.createFilledBar(FlxColor.CRIMSON, FlxColor.YELLOW, true, FlxColor.YELLOW);
+		add(_enemyHealthBar);
+		
+		// создаём выбор нашего действия
+		_choices = new Array<FlxText>();
+		_choices.push(new FlxText(_sprBack.x + 30, _sprBack.y + 48, 85, "FIGHT", 22));
+		_choices.push(new FlxText(_sprBack.x + 30, _choices[0].y + _choices[0].height + 8, 85, "FIGHT", 22));
+		add(_choices[0]);
+		add(_choices[1]);
+		
+		_pointer = new FlxSprite(_sprBack.x + 10, _choices[0].y + (_choices[0].height / 2) - 8, AssetPaths.pointer__png);
+		_pointer.visible = false;
+		add(_pointer);
 	}
 	
 }
