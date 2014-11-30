@@ -49,7 +49,7 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	private var _selected:Int = 0; // Отслеживает какой вариант выбран	
 	private var _choices:Array<FlxText>; //Этот массив будет содержать FlxTexts для наших 2-х вариантов: Борьба и Бегство
 	
-	private var _result:FlxText; // результат битвы
+	private var _results:FlxText; // результат битвы
 	
 	private var _alpha:Float = 0; // будет использоваться для быхода из боевого интерфейса
 	private var _wait:Bool = true; // этот флаг будет установлен в верно, когда не хотим, чтобы игрок делал что-нибудь (между витками)
@@ -102,6 +102,21 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		_pointer = new FlxSprite(_sprBack.x + 10, _choices[0].y + (_choices[0].height / 2) - 8, AssetPaths.pointer__png);
 		_pointer.visible = false;
 		add(_pointer);
+		
+		// создать тексты повреждениq. Мы заставим их быть белым текстом с красной тенью (так они выделяются).
+		_damages = new Array<FlxText>();
+		_damages.push(new FlxText(0, 0, 40));
+		_damages.push(new FlxText(0, 0, 40));
+		for (d in _damages) 
+		{
+			d.color = FlxColor.WHITE;
+			d.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.RED);
+			d.aligment = "center";
+			d.visible = false;
+			add(d);
+		}
+		// создаём наш результирующий текст. Мы его расположим но спрячем
+		s
 	}
 	
 }
