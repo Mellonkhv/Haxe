@@ -147,9 +147,30 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	 * @param	playerHealth  количество здоровья игрока
 	 * @param	enemy враг с которым мы сцепились
 	 */
-	public function initCombat(playerHealth:Int, enemy:Enemy):Void
+	public function initCombat(PlayerHealth:Int, enemy:Enemy):Void
 	{
+		playerHealth = PlayerHealth;
+		e = enemy;
 		
+		updatePlayerHealth();
+		
+		// настройки врага
+		_enemyMaxHealth = _enemyHealth = (e.etype + 1) * 2;//У каждого врага будет здоровье на основе типов: Тип 0=2 здоровья, тип 1=4 здоровья
+		_enemyHealthBar.currentValue = 100; // Прогрессбар здоровья на 100%
+		_sprEnemy.changeEnemy(e.etype); // заменить нашего врага в соответствии с его типом
+		
+		// Убедимся что мы инициализировали всё правильно до того как начнём
+		_wait = true;
+		_results.text = "";
+		_pointer.visible = false;
+		_results.visible = false;
+		outcome = NONE;
+		_selected = 0;
+		
+		visible = true; // отобразить наш HUD обращении к нему - обратите внимание, что это не активен, пока!
+		
+		//сделать анимацию исчезновения нашего combatHUD, когда анимация закончена вызывается finishFadeIn
+		FlxTween.num(0, 1, .66, { ease:FlxEase.circOut, complete:finishFadeIn }, updateAlpha);
 	}
 	
 }
