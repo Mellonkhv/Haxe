@@ -116,7 +116,40 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 			add(d);
 		}
 		// создаём наш результирующий текст. Мы его расположим но спрячем
-		s
+		_results = new FlxText(_sprBack.x + 2, _sprBack.y + 9, 116, "", 18);
+		_results.alignment = "center";
+		_results.color = FlxColor.YELLOW;
+		_results.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY);
+		_results.visible = false;
+		add(_results);
+		
+		// Отключаем прокрутку для всех элементов класса.
+		forEach(function(spr:FlxSprite) {
+			spr.scrollFactor.set();
+			spr.alpha = 0;
+		});
+		
+		// Отметить данный класс как неактивный и невидимый, пока мы не будем готовы показать их.
+		active = false;
+		visible = false;
+		
+		_sndFled = FlxG.sound.load(AssetPaths.fled__wav);
+		_sndHurt = FlxG.sound.load(AssetPaths.hurt__wav);
+		_sndLose = FlxG.sound.load(AssetPaths.lose__wav);
+		_sndMiss = FlxG.sound.load(AssetPaths.miss__wav);
+		_sndSelect = FlxG.sound.load(AssetPaths.select__wav);
+		_sndWin = FlxG.sound.load(AssetPaths.win__wav);
+		_sndCombat = FlxG.sound.load(AssetPaths.combat__wav);
+	}
+	
+	/**
+	 * Эта функция будет вызываться из PlayState, когда мы хотим начать бой. Это будет установка экрана и убедиться, что все готово.
+	 * @param	playerHealth  количество здоровья игрока
+	 * @param	enemy враг с которым мы сцепились
+	 */
+	public function initCombat(playerHealth:Int, enemy:Enemy):Void
+	{
+		
 	}
 	
 }
