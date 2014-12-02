@@ -1,14 +1,20 @@
 package ;
 
+import flash.filters.ColorMatrixFilter;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flixel.addons.effects.FlxWaveSprite;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxRandom;
 using flixel.util.FlxSpriteUtil;
 
@@ -54,7 +60,16 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	private var _alpha:Float = 0; // будет использоваться для быхода из боевого интерфейса
 	private var _wait:Bool = true; // этот флаг будет установлен в верно, когда не хотим, чтобы игрок делал что-нибудь (между витками)
 
+	private var _sndFled:FlxSound;
+	private var _sndHurt:FlxSound;
+	private var _sndLose:FlxSound;
+	private var _sndMiss:FlxSound;
+	private var _sndSelect:FlxSound;
+	private var _sndWin:FlxSound;
+	private var _sndCombat:FlxSound;
 	
+	private var _sprScreen:FlxSprite;
+	private var _sprWave:FlxWaveSprite;
 	
 	public function new() 
 	{
@@ -149,7 +164,19 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public function initCombat(playerHealth:Int, enemy:Enemy):Void
 	{
+		#if flash
+		_sprScreen.pixels.copyPixels(FlxG.camera.buffer, FlxG.camera.buffer.rect, new Point());
+		#else
+		_sprScreen.pixels.draw(FlxG.camera.canvas, new Matrix(1, 0, 0, 1, 0, 0));
 		
+		var rc:Float = 1 / 3;
+		var gc:Float = 1 / 2;
+		var bc:Float = 1 / 6;
+		_sprScreen.pixels.applyFilter(_sprScreen.pixels, _sprScreen.pixels.rect, new Point(), new ColorMatrixFilter([rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, 0, 0, 0, 1, 0]);
+		_sprScreen.resetFrameBitmapDatas();
+		_sprScreen.dirty = true;
+		
+		_sndCombat.
 	}
 	
 }
