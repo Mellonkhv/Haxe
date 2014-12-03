@@ -164,12 +164,11 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public function initCombat(PlayerHealth:Int, enemy:Enemy):Void
 	{
-<<<<<<< HEAD
 		#if flash
 		_sprScreen.pixels.copyPixels(FlxG.camera.buffer, FlxG.camera.buffer.rect, new Point());
 		#else
 		_sprScreen.pixels.draw(FlxG.camera.canvas, new Matrix(1, 0, 0, 1, 0, 0));
-		
+		#end
 		var rc:Float = 1 / 3;
 		var gc:Float = 1 / 2;
 		var bc:Float = 1 / 6;
@@ -177,8 +176,7 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		_sprScreen.resetFrameBitmapDatas();
 		_sprScreen.dirty = true;
 		
-		_sndCombat.
-=======
+		_sndCombat.play();
 		playerHealth = PlayerHealth;
 		e = enemy;
 		
@@ -196,12 +194,34 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		_results.visible = false;
 		outcome = NONE;
 		_selected = 0;
+		movePointer();
 		
 		visible = true; // отобразить наш HUD обращении к нему - обратите внимание, что это не активен, пока!
 		
 		//сделать анимацию исчезновения нашего combatHUD, когда анимация закончена вызывается finishFadeIn
 		FlxTween.num(0, 1, .66, { ease:FlxEase.circOut, complete:finishFadeIn }, updateAlpha);
->>>>>>> origin/master
+	}
+	
+	/**
+	 * Функция вызывается для анимации проявления / исчезновения
+	 * @param	Value
+	 */
+	private function updateAlpha(Value:Float):Void
+	{
+		_alpha = Value;
+		forEach(function(spr:FlxSprite) {
+			spr.alpha = _alpha;
+		});
+	}
+	
+	/**
+	 * 
+	 */
+	private function finishFadeIn(_):Void
+	{
+		active  = true;
+		_wait = false;
+		_pointer.visible = true;
 	}
 	
 }
