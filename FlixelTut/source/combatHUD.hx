@@ -215,7 +215,7 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	}
 	
 	/**
-	 * 
+	 * После того как визуальная часть проявилась активируем combatHUD и показываем указатель
 	 */
 	private function finishFadeIn(_):Void
 	{
@@ -224,6 +224,32 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		_pointer.visible = true;
 	}
 	
+	/**
+	 * После того как визуальная часть исчезла деактивируем combatHUD и всё прячем
+	 */
+	private function finishFadeOut(_):Void
+	{
+		active = false;
+		visible = false;
+	}
+	
+	/**
+	 * Эта функция вызывается для отображения здоровья игрока
+	 */
+	private function updatePlayerHealth():Void
+	{
+		_txtPlayerHealth.text = Std.string(playerHealth) + " / 3";
+		_txtPlayerHealth.x = _sprPlayer.x + 4 - (_txtPlayerHealth.width / 2);
+	}
+	
+	override public function update():Void 
+	{
+		if (!_wait)
+		{
+			
+		}
+		super.update();
+	}
 }
 
 /**
