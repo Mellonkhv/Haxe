@@ -246,6 +246,44 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	{
 		if (!_wait)
 		{
+			// Настройка нескольких простых флагов, чтобы увидеть, какие клавиши нажаты.
+			var _up:Bool = false;
+			var _down:Bool = false;
+			var _fire:Bool = false;
+			
+			// Проверить нажатие клавиш и установить соответствующий флаг
+			if (FlxG.keys.anyJustReleased(["SPACE", "X"]))
+			{
+				_fire = true;
+			}
+			else if (FlxG.keys.anyJustReleased(["W", "UP"]))
+			{
+				_up = true;
+			}
+			else if (FlxG.keys.anyJustReleased(["S", "DOWN"]))
+			{
+				_down = true;
+			}
+			
+			// на основании нажатой клавиши выполняем указаное действие
+			if (_fire)
+			{
+				makeChoice(); // когда игрок выбирает любой вариант, мы вызываем эту функцию для обработки их выбора
+			}
+			else if (_up)
+			{
+				// если игрок нажимает вверх, мы перемещаем курсора вверх (с обертыванием)
+				if (_selected == 0) _selected = 1;
+				else _selected--;
+				movePointer();
+			}
+			else if (_down)
+			{
+				// если игрок нажимает вниз, мы перемещаем курсора вниз (с обертыванием)
+				if (_selected == 0) _selected = 0;
+				else _selected++;
+				movePointer();
+			}
 			
 		}
 		super.update();
