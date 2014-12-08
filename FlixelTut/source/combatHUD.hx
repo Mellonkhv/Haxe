@@ -288,6 +288,48 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		}
 		super.update();
 	}
+	
+	/**
+	 * Вызовите эту функцию, чтобы поместить курсор на выбранной вариант
+	 */
+	private function movePointer():Void
+	{
+		_pointer.y = _choices[_selected].y + (_choices[_selected].height / 2) - 8;
+	}
+	
+	/**
+	 * Эта функция обрабатывает выбор игрока
+	 */
+	private function makeChoice():Void
+	{
+		_pointer.visible = false; // спрятать пункты выбора
+		switch(_selected) // проверить какой пункт выбрал игрок
+		{
+			case 0:
+				// Был выбран бой
+				// игрок атакует первым и имеет шанс нанести повреждение 85%
+				if (FlxRandom.chanceRoll(85))
+				{
+					// если удалось попасть, наносим врагу 1 урона и устанавливаем наш индикатор повреждения
+					_damages[1].text = "1";
+					_enemyHealth--;
+					// Изменяем панельздоровья противника
+					_enemyHealthBar.currentValue = (_enemyHealth / _enemyMaxHealth) * 100;
+				}
+				else
+				{
+					// В тексте повреждений пишем "Промох"
+					_damages[1].text = "MISS!";
+				}
+				
+				// Поместите текстовый повреждения над врагом, и установите его в прозрачность в 0, а 
+				// видимость=истинна (так что он получает рисовать называют на нем)
+				_damages[1].x = _sprEnemy.x + 2 - (_damages[1].width / 2);
+				_damages[1].y = _sprEnemy.y + 4 - (_damages[1].height / 2);
+				_damages[1].alpha = 0;
+				_damages[1].visible = true;
+		}
+	}
 }
 
 /**
