@@ -328,7 +328,38 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 				_damages[1].y = _sprEnemy.y + 4 - (_damages[1].height / 2);
 				_damages[1].alpha = 0;
 				_damages[1].visible = true;
+				
+				// Если враг ещё жив он бьёт в ответ
+				if (_enemyHealth > 0)
+				{
+					enemyAttack();
+				}
+				
+				// Устанавливаем 2 анимации позволяющим индикаторам повреждений проявиться и всплыть из спрайтов
+				FlxTween.num(_damages[0].y, _damages[0].y - 12, 1, { ease:FlxEase.circOut }, updateDamageY);
+				FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamegeAlpha);
+			
+			case 1:
+				// Если игрок выбрал сбежать даём ему 50/50 шанс сбежать
+				if (FlxRandom.chanceRoll(50))
+				{
+					// Если удалось показываем сообщение "Сбежал!"
+					outcome = ESCAPE;
+					_results.text = "ESCAPED!";
+					_results.visible = true;
+					_results.alpha = 0;
+					FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
+				}
+				else
+				{
+					//Если сбежатьне удалось, враг атакует
+					enemyAttack();
+					FlxTween.num(_damages[0].y, _damages[0].y - 12, 1, { ease:FlxEase.circOut }, updateDamageY);
+					FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamegeAlpha);
+				}
 		}
+		// В независимости отпроисходящего надо выставить флаг "wait" так что бы можно было показать, что произошло, прежде чем продолжить
+		_wait = true;
 	}
 }
 
