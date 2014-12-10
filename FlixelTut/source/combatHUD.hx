@@ -361,6 +361,107 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		// В независимости отпроисходящего надо выставить флаг "wait" так что бы можно было показать, что произошло, прежде чем продолжить
 		_wait = true;
 	}
+	
+	/**
+	 * Эта функция вызывается в любой момент когда мы хотим чтобы враг атаковал игрока
+	 */
+	private function enemyAttack():Void
+	{
+		// даём врагу 30% шанс попасть в игрока
+		if (FlxRandom.chanceRoll(30))
+		{
+			// Если враг попал сделать белую вспышку и отнять еденицу здоровья у игрока после чего обновить здоровье
+			FlxG.camera.flash(FlxColor.WHITE, .2);
+			_damages[0].text = "1";
+			playerHealth--;
+			updatePlayerHealth();
+		}
+		else
+		{
+			_damages[0].text = "MISS!";
+		}
+		
+		// Боевой текст появляется над игроком и поднимаясь вверх исчезает
+		_damages[0].x = _sprPlayer.x + 2 - (_damages[0].width / 2);
+		_damages[0].y = _sprPlayer.y + 4 - (_damages[0].height / 2);
+		_damages[0].alpha = 0;
+		_damages[0].visible = true;
+	}
+	
+	/**
+	 * Эта функция вызывается из наших анимаций для перемещения отображений повреждений вверх на экране
+	 * @param Value
+	 */
+	private function updateDamageY(Value:Float):Void
+	{
+		_damages[0].y = _damages[1].y = Value;
+	}
+	
+	/**
+	 * Эта функция вызывается из наших "Tweens" для проявления / исчезновения текста повреждении
+	 * @param Value
+	 */
+	private function updateDamageAlpha(Value:Float):Void
+	{
+		_damages[0].alpha = _damages[1].alpha = Value;
+	}
+	
+	/**
+	 * Эта функция вызывается, когда наш текст повреждений закончил проявляться - это вызовет их, чтобы начать исчезать снова, после небольшой паузы
+	 */
+	private function doneDamageIn(_):Void
+	{
+		FlxTween.num(1, 0, .66, { ease:FlxEase.circInOut, startDelay:1, complete:doneDamageOut }, updateDamageAlpha);
+	}
+	
+	/**
+	 * Эта функция вызывается, когда наш текст результатов закончил исчезать. Если мы не побеждены, будет исчезать весь HUD после короткой задержки
+	 */
+	private function doneResultsIn(_):Void
+	{
+		if (outcome != DEFEAT)
+		{
+			FlxTween.num(1, 0, .66, { ease:FlxEase.circOut, complete:finishFadeOut, startDelay:1 }, updateAlpha);
+		}
+	}
+	
+	/**
+	 * Эта функция вызывается, когда текст повреждения закончил исчезать. Он будет очищен и сброшен для следующего раза.
+	 * Он также будет проверять и понять, что мы должны делать - если враг мертв: мы вызываем победу, если игрок умер: 
+	 * мы вызваем поражение, в противном случае мы запускаем в следующий раунд.
+	 */
+	private function doneDamageOut(_):Void
+	{
+		_damages[0].visible = false;
+		_damages[1].visible = false;
+		_damages[0].text = "";
+		_damages[1].text = "";
+		
+		if (playerHealth <= 0)
+		{
+			// Если здоровье игрока меньше 0, мы показываем сообщение о паражении и заставляем его исчезать
+			outcome = DEFEAT;
+			_results.text = "DEFEAT!";
+			_results.visible = true;
+			_results.alpha = 0;
+			FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
+		}
+		else if (_enemyHealth <= 0)
+		{
+			// Если здоровье врага меньше 0, мы показываем сообщение о победе и заставляем его исчезать
+			outcome = VICTORY;
+			_results.text = "VICTORY!";
+			_results.visible = true;
+			_results.alpha = 0;
+			FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
+		}
+		else
+		{
+			// если оба всё ещё живы, тогда мы сбрасываем и игрок должен снова сделать выбор
+			_wait = false;
+			_pointer.visible = true;
+		}
+	}
 }
 
 /**
