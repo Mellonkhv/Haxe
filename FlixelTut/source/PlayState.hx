@@ -29,6 +29,8 @@ class PlayState extends FlxState
 	private var _hud:HUD;
 	private var _money:Int = 0;
 	private var _health:Int = 3;
+	private var _inCombat:Bool = false;
+	private var _combatHUD:combatHUD;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -64,6 +66,9 @@ class PlayState extends FlxState
 		// Добавляем интерфейс
 		_hud = new HUD();
 		add(_hud);
+		
+		_combatHUD = new combatHUD();
+		add(_combatHUD);
 		
 		super.create();
 	}
@@ -102,12 +107,34 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		
-		FlxG.collide(_player, _mWalls); // Упираемся в стены
-		FlxG.overlap(_player, _grpCoins, playerTouchCoin); // Собираем монетки
-		
-		FlxG.collide(_grpEnemies, _mWalls); // Враги упираются в стены
-		checkEnemyVision(); // Проврка видимости врагами
+		if (!_inCombat)
+		{
+			FlxG.collide(_player, _mWalls); // Упираемся в стены
+			FlxG.overlap(_player, _grpCoins, playerTouchCoin); // Собираем монетки
+			
+			FlxG.collide(_grpEnemies, _mWalls); // Враги упираются в стены
+			checkEnemyVision(); // Проврка видимости врагами
+			FlxG.overlap(_player, _grpEnemies, playerTouchCoin);
+		}
+		else
+		{
+			if (!_combatHUD.visible)
+			{
+				_health = _combatHUD.playerHealth;
+				_hud.updateHUD(_health, _money);
+				if (_combatHUD.outcome == VICTORY)
+				{
+					_combatHUD.e.kill();
+				}
+				else
+				{
+					_combatHUD.e.flicker();
+				}
+				_inCombat = false;
+				_player.active = true;
+				_grpEnemies.active = true;
+			}
+		}
 	}	
 	
 	/**
