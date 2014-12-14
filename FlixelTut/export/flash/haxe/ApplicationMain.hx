@@ -116,8 +116,6 @@ class ApplicationMain {
 			
 		}
 		
-		preloader = null;
-		
 		
 		
 		if (loaded == total) {

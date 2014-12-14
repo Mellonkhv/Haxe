@@ -22,7 +22,7 @@ using flixel.util.FlxSpriteUtil;
  * ...
  * @author Mellonkhv
  */
-class combatHUD extends FlxTypedGroup<FlxSprite>
+class CombatHUD extends FlxTypedGroup<FlxSprite>
 {
 	
 	/**
@@ -46,7 +46,7 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 	private var _enemyMaxHealth:Int;
 	private var _enemyHealthBar:FlxBar; // FlxBar покажет текущее / максимальное здоровье врага
 	
-	private var _txtPlayerHealth:FlxText // Показывает текущее количество жизни у игрока
+	private var _txtPlayerHealth:FlxText; // Показывает текущее количество жизни у игрока
 	
 	// Этот массив будет содержать 2 объекта FlxText, которые будут появляться, чтобы показать наносённый уронмили промахи
 	private var _damages:Array<FlxText>;
@@ -126,7 +126,7 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		{
 			d.color = FlxColor.WHITE;
 			d.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.RED);
-			d.aligment = "center";
+			d.alignment = "center";
 			d.visible = false;
 			add(d);
 		}
@@ -172,7 +172,7 @@ class combatHUD extends FlxTypedGroup<FlxSprite>
 		var rc:Float = 1 / 3;
 		var gc:Float = 1 / 2;
 		var bc:Float = 1 / 6;
-		_sprScreen.pixels.applyFilter(_sprScreen.pixels, _sprScreen.pixels.rect, new Point(), new ColorMatrixFilter([rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, 0, 0, 0, 1, 0]);
+	_sprScreen.pixels.applyFilter(_sprScreen.pixels, _sprScreen.pixels.rect, new Point(), new ColorMatrixFilter([rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, 0, 0, 0, 1, 0]));
 		_sprScreen.resetFrameBitmapDatas();
 		_sprScreen.dirty = true;
 		

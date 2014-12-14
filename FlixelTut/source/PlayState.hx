@@ -30,7 +30,7 @@ class PlayState extends FlxState
 	private var _money:Int = 0;
 	private var _health:Int = 3;
 	private var _inCombat:Bool = false;
-	private var _combatHUD:combatHUD;
+	private var _combatHUD:CombatHUD;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -67,7 +67,7 @@ class PlayState extends FlxState
 		_hud = new HUD();
 		add(_hud);
 		
-		_combatHUD = new combatHUD();
+		_combatHUD = new CombatHUD();
 		add(_combatHUD);
 		
 		super.create();
@@ -135,7 +135,34 @@ class PlayState extends FlxState
 				_grpEnemies.active = true;
 			}
 		}
-	}	
+	}
+	
+	/**
+	 * Игрок столкнулся с врагом
+	 * @param	player
+	 * @param	enemy
+	 */
+	private function playerTouchEnemy(player:Player, enemy:Enemy):Void
+	{
+		// Если игрок жив и враг жив и не мерцает
+		if (player.alive && player.exists && enemy.alive && enemy.exists && !enemy.isFlickering())
+		{
+			startCombat(E); // Начинаем бойню
+		}
+	}
+	
+	/**
+	 * Старт боя с текущим врагом
+	 * @param	enemy
+	 */
+	private function startCombat(enemy:Enemy):Void 
+	{
+		// Делаем игрока и всех врагов неактивными
+		_inCombat = true;
+		_player.active = false;
+		_grpEnemies.active = false;
+		_combatHUD.initCombat(_health, enemy);
+	}
 	
 	/**
 	 * Зрение врагов

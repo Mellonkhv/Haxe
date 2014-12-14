@@ -144,7 +144,7 @@ class Enemy extends FlxSprite
 	 */
 	override public function update():Void 
 	{
-		//movement();
+		if (isFlickering()) return;
 		_brain.update();
 		super.update();
 	}
