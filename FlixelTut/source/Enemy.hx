@@ -8,6 +8,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
+using flixel.util.FlxSpriteUtil;
 
 /**
  * Класс врагов
@@ -137,6 +138,15 @@ class Enemy extends FlxSprite
 			}
 		
 		super.draw();
+	}
+	
+	public function changeEnemy(enemyType:Int):Void
+	{
+		if (etype != enemyType)
+		{
+			etype = enemyType;
+			loadGraphic("assets/images/enemy-" + Std.string(etype) + ".png", true, 16, 16);
+		}
 	}
 	
 	/**

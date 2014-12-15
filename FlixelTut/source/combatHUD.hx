@@ -337,7 +337,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				
 				// Устанавливаем 2 анимации позволяющим индикаторам повреждений проявиться и всплыть из спрайтов
 				FlxTween.num(_damages[0].y, _damages[0].y - 12, 1, { ease:FlxEase.circOut }, updateDamageY);
-				FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamegeAlpha);
+				FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamageAlpha);
 			
 			case 1:
 				// Если игрок выбрал сбежать даём ему 50/50 шанс сбежать
@@ -355,7 +355,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 					//Если сбежатьне удалось, враг атакует
 					enemyAttack();
 					FlxTween.num(_damages[0].y, _damages[0].y - 12, 1, { ease:FlxEase.circOut }, updateDamageY);
-					FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamegeAlpha);
+					FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamageAlpha);
 				}
 		}
 		// В независимости отпроисходящего надо выставить флаг "wait" так что бы можно было показать, что произошло, прежде чем продолжить
