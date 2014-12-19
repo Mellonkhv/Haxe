@@ -147,7 +147,7 @@ class PlayState extends FlxState
 		// Если игрок жив и враг жив и не мерцает
 		if (player.alive && player.exists && enemy.alive && enemy.exists && !enemy.isFlickering())
 		{
-			startCombat(E); // Начинаем бойню
+			startCombat(enemy); // Начинаем бойню
 		}
 	}
 	
