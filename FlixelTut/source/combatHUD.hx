@@ -74,7 +74,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	public function new() 
 	{
 		super();
-		
 		// Рисуем чёрный фон с белым кантом
 		_sprBack = new FlxSprite().makeGraphic(120, 120, FlxColor.WHITE);
 		_sprBack.drawRect(1, 1, 118, 44, FlxColor.BLACK);
@@ -83,7 +82,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		add(_sprBack);
 		
 		// Добавим "пустышку" игрока который не может двигаться
-		_sprPlayer = new Player(_sprBack.x +36, _sprPlayer.y + 16);
+		_sprPlayer = new Player(_sprBack.x + 36, _sprBack.y + 16);
 		_sprPlayer.animation.frameIndex = 3;
 		_sprPlayer.active = false;
 		_sprPlayer.facing = FlxObject.RIGHT;
@@ -103,14 +102,14 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		add(_txtPlayerHealth);
 		
 		// Создание и добавление FlxBar для отображения здоровья противника. Мы будем делать это красным и желтым.
-		_enemyHealthBar = new FlxBar(_sprEnemy.x - 6, _txtPlayerHealth.y, FlxBar.FILL_LEFT_TO_RIGHT, 20, 20);
+		_enemyHealthBar = new FlxBar(_sprEnemy.x - 6, _txtPlayerHealth.y, FlxBar.FILL_LEFT_TO_RIGHT, 20, 10);
 		_enemyHealthBar.createFilledBar(FlxColor.CRIMSON, FlxColor.YELLOW, true, FlxColor.YELLOW);
 		add(_enemyHealthBar);
 		
 		// создаём выбор нашего действия
 		_choices = new Array<FlxText>();
 		_choices.push(new FlxText(_sprBack.x + 30, _sprBack.y + 48, 85, "FIGHT", 22));
-		_choices.push(new FlxText(_sprBack.x + 30, _choices[0].y + _choices[0].height + 8, 85, "FIGHT", 22));
+		_choices.push(new FlxText(_sprBack.x + 30, _choices[0].y + _choices[0].height + 8, 85, "FLEE", 22));
 		add(_choices[0]);
 		add(_choices[1]);
 		
@@ -162,23 +161,11 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 * @param	playerHealth  количество здоровья игрока
 	 * @param	enemy враг с которым мы сцепились
 	 */
-	public function initCombat(PlayerHealth:Int, enemy:Enemy):Void
+	public function initCombat(PlayerHealth:Int, E:Enemy):Void
 	{
-		#if flash
-		_sprScreen.pixels.copyPixels(FlxG.camera.buffer, FlxG.camera.buffer.rect, new Point());
-		#else
-		_sprScreen.pixels.draw(FlxG.camera.canvas, new Matrix(1, 0, 0, 1, 0, 0));
-		#end
-		var rc:Float = 1 / 3;
-		var gc:Float = 1 / 2;
-		var bc:Float = 1 / 6;
-	_sprScreen.pixels.applyFilter(_sprScreen.pixels, _sprScreen.pixels.rect, new Point(), new ColorMatrixFilter([rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, 0, 0, 0, 1, 0]));
-		_sprScreen.resetFrameBitmapDatas();
-		_sprScreen.dirty = true;
 		
-		_sndCombat.play();
 		playerHealth = PlayerHealth;
-		e = enemy;
+		e = E;
 		
 		updatePlayerHealth();
 		
@@ -194,7 +181,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		_results.visible = false;
 		outcome = NONE;
 		_selected = 0;
-		movePointer();
 		
 		visible = true; // отобразить наш HUD обращении к нему - обратите внимание, что это не активен, пока!
 		
@@ -280,7 +266,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			else if (_down)
 			{
 				// если игрок нажимает вниз, мы перемещаем курсора вниз (с обертыванием)
-				if (_selected == 0) _selected = 0;
+				if (_selected == 1) _selected = 0;
 				else _selected++;
 				movePointer();
 			}

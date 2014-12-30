@@ -39,6 +39,14 @@ class ApplicationMain {
 		types.push (AssetType.TEXT);
 		
 		
+		urls.push ("assets/data/tutorial.oep");
+		types.push (AssetType.TEXT);
+		
+		
+		urls.push ("assets/images/button.png");
+		types.push (AssetType.IMAGE);
+		
+		
 		urls.push ("assets/images/coin.png");
 		types.push (AssetType.IMAGE);
 		
@@ -71,12 +79,56 @@ class ApplicationMain {
 		types.push (AssetType.IMAGE);
 		
 		
+		urls.push ("assets/music/HaxeFlixel_Tutorial_Game.mp3");
+		types.push (AssetType.MUSIC);
+		
+		
+		urls.push ("assets/music/HaxeFlixel_Tutorial_Game.ogg");
+		types.push (AssetType.MUSIC);
+		
+		
 		urls.push ("assets/music/music-goes-here.txt");
 		types.push (AssetType.TEXT);
 		
 		
+		urls.push ("assets/sounds/coin.wav");
+		types.push (AssetType.SOUND);
+		
+		
+		urls.push ("assets/sounds/combat.wav");
+		types.push (AssetType.SOUND);
+		
+		
+		urls.push ("assets/sounds/fled.wav");
+		types.push (AssetType.SOUND);
+		
+		
+		urls.push ("assets/sounds/hurt.wav");
+		types.push (AssetType.SOUND);
+		
+		
+		urls.push ("assets/sounds/lose.wav");
+		types.push (AssetType.SOUND);
+		
+		
+		urls.push ("assets/sounds/miss.wav");
+		types.push (AssetType.SOUND);
+		
+		
+		urls.push ("assets/sounds/select.wav");
+		types.push (AssetType.SOUND);
+		
+		
 		urls.push ("assets/sounds/sounds-go-here.txt");
 		types.push (AssetType.TEXT);
+		
+		
+		urls.push ("assets/sounds/step.wav");
+		types.push (AssetType.SOUND);
+		
+		
+		urls.push ("assets/sounds/win.wav");
+		types.push (AssetType.SOUND);
 		
 		
 		urls.push ("assets/sounds/beep.mp3");
@@ -104,7 +156,7 @@ class ApplicationMain {
 		
 		var loaded = 0;
 		var total = 0;
-		var library_onLoad = function (_) {
+		var library_onLoad = function (__) {
 			
 			loaded++;
 			
@@ -115,6 +167,8 @@ class ApplicationMain {
 			}
 			
 		}
+		
+		preloader = null;
 		
 		
 		

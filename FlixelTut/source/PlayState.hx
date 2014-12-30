@@ -6,11 +6,16 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
+import flixel.util.FlxAngle;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
+using flixel.util.FlxSpriteUtil;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -38,8 +43,8 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		// Дабавляем карту
-		_map = new FlxOgmoLoader("assets/data/room-001.oel");
-		_mWalls = _map.loadTilemap("assets/images/tiles.png", 16, 16, "walls");
+		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
@@ -75,20 +80,23 @@ class PlayState extends FlxState
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void 
 	{
+		var x:Int = Std.parseInt(entityData.get("x"));
+		var y:Int = Std.parseInt(entityData.get("y"));
+		
 		if (entityName == "player")
 		{
-			_player.x = Std.parseInt(entityData.get("x"));
-			_player.y = Std.parseInt(entityData.get("y"));
+			_player.x = x;
+			_player.y = y;
 		}
 		else if (entityName == "coin")
 		{
 			// расставляем монетки по карте
-			_grpCoins.add(new Coin(Std.parseInt(entityData.get("x")) + 4, Std.parseInt(entityData.get("y")) + 4));
+			_grpCoins.add(new Coin(x + 4, y + 4));
 		}
 		else if (entityName == "enemy")
 		{
 			// Раставление врагов по карте
-			_grpEnemies.add(new Enemy(Std.parseInt(entityData.get("x")) + 4, Std.parseInt(entityData.get("y")), Std.parseInt(entityData.get("etype")))); 
+			_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype"))));
 		}
 	}
 	
@@ -114,7 +122,7 @@ class PlayState extends FlxState
 			
 			FlxG.collide(_grpEnemies, _mWalls); // Враги упираются в стены
 			checkEnemyVision(); // Проврка видимости врагами
-			FlxG.overlap(_player, _grpEnemies, playerTouchCoin);
+			FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		}
 		else
 		{
@@ -142,12 +150,12 @@ class PlayState extends FlxState
 	 * @param	player
 	 * @param	enemy
 	 */
-	private function playerTouchEnemy(player:Player, enemy:Enemy):Void
+	private function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
 		// Если игрок жив и враг жив и не мерцает
-		if (player.alive && player.exists && enemy.alive && enemy.exists && !enemy.isFlickering())
+		if (P.alive && P.exists && E.alive && E.exists && !E.isFlickering())
 		{
-			startCombat(enemy); // Начинаем бойню
+			startCombat(E); // Начинаем бойню
 		}
 	}
 	
@@ -155,13 +163,13 @@ class PlayState extends FlxState
 	 * Старт боя с текущим врагом
 	 * @param	enemy
 	 */
-	private function startCombat(enemy:Enemy):Void 
+	private function startCombat(E:Enemy):Void 
 	{
 		// Делаем игрока и всех врагов неактивными
 		_inCombat = true;
 		_player.active = false;
 		_grpEnemies.active = false;
-		_combatHUD.initCombat(_health, enemy);
+		_combatHUD.initCombat(_health, E);
 	}
 	
 	/**
