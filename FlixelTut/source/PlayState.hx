@@ -12,6 +12,7 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
@@ -36,6 +37,8 @@ class PlayState extends FlxState
 	private var _health:Int = 3;
 	private var _inCombat:Bool = false;
 	private var _combatHUD:CombatHUD;
+	private var _ending:Bool;
+	private var _won:Bool;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -115,6 +118,11 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		if (_ending)
+		{
+			return;
+		}
+		
 		if (!_inCombat)
 		{
 			FlxG.collide(_player, _mWalls); // Упираемся в стены
@@ -130,17 +138,31 @@ class PlayState extends FlxState
 			{
 				_health = _combatHUD.playerHealth;
 				_hud.updateHUD(_health, _money);
-				if (_combatHUD.outcome == VICTORY)
+				if (_combatHUD.outcome == DEFEAT)
 				{
-					_combatHUD.e.kill();
+					_ending = true;
+					FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
 				}
 				else
 				{
-					_combatHUD.e.flicker();
+					if (_combatHUD.outcome == VICTORY)
+					{
+						_combatHUD.e.kill();
+						if (_combatHUD.e.etype == 1)
+						{
+							_won = true;
+							_ending = true;
+							FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
+						}
+					}
+					else
+					{
+						_combatHUD.e.flicker();
+					}
+					_inCombat = false;
+					_player.active = true;
+					_grpEnemies.active = true;
 				}
-				_inCombat = false;
-				_player.active = true;
-				_grpEnemies.active = true;
 			}
 		}
 	}
