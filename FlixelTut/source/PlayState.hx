@@ -167,6 +167,11 @@ class PlayState extends FlxState
 		}
 	}
 	
+	private function doneFadeOut():Void
+	{
+		FlxG.switchState(new GameOverState(_won, _money));
+	}
+	
 	/**
 	 * Игрок столкнулся с врагом
 	 * @param	player
