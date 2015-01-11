@@ -454,7 +454,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		_sprBack = FlxDestroyUtil.destroy(_sprBack);
 		_sprPlayer = FlxDestroyUtil.destroy(_sprPlayer);
 		_sprEnemy = FlxDestroyUtil.destroy(_sprEnemy);
-		_enemyHealthBar = FlxDestroyUtil.destroy(_enemyHealthBar);
+		//_enemyHealthBar = FlxDestroyUtil.destroy(_enemyHealthBar);
 		_txtPlayerHealth = FlxDestroyUtil.destroy(_txtPlayerHealth);
 		_damages = FlxDestroyUtil.destroyArray(_damages);
 		_pointer = FlxDestroyUtil.destroy(_pointer);
