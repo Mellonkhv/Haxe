@@ -156,7 +156,7 @@ class ApplicationMain {
 		
 		var loaded = 0;
 		var total = 0;
-		var library_onLoad = function (__) {
+		var library_onLoad = function (_) {
 			
 			loaded++;
 			
