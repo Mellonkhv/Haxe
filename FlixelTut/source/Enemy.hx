@@ -3,8 +3,10 @@ package ;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.system.FlxSound;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
@@ -30,6 +32,7 @@ class Enemy extends FlxSprite
 	private var _brain:FSM;
 	private var _idleTmr:Float;
 	private var _moveDir:Float;
+	private var _sndStep:FlxSound;
 	
 	/**
 	 * Конструктор класса Player с координатами
@@ -66,6 +69,9 @@ class Enemy extends FlxSprite
 		height = 14;
 		offset.x = 4;
 		offset.y = 2;
+		
+		_sndStep = FlxG.sound.load(AssetPaths.step__wav, .4);
+		_sndStep.proximity(x, y, FlxG.camera.target, FlxG.width * .6);
 	}
 	
 	private function idle():Void
@@ -111,6 +117,9 @@ class Enemy extends FlxSprite
 	{
 		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 			{
+				_sndStep.setPosition(x + _halfWidth, y + height);
+				_sndStep.play();
+				
 				if (Math.abs(velocity.x) > Math.abs(velocity.y))
 				{
 					if (velocity.x < 0)
@@ -157,5 +166,12 @@ class Enemy extends FlxSprite
 		if (isFlickering()) return;
 		_brain.update();
 		super.update();
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		
+		_sndStep = FlxDestroyUtil.destroy(_sndStep);
 	}
 }

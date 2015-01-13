@@ -69,6 +69,7 @@ class GameOverState extends FlxState
 		
 		_btnMainMenu = new FlxButton(0, FlxG.height - 32, "Main Menu", goToMainMenu);
 		_btnMainMenu.screenCenter(true, false);
+		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnMainMenu);
 		
 		super.create();

@@ -163,6 +163,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public function initCombat(PlayerHealth:Int, E:Enemy):Void
 	{
+		_sndCombat.play();
 		
 		playerHealth = PlayerHealth;
 		e = E;
@@ -205,6 +206,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	private function finishFadeIn(_):Void
 	{
+		_sndSelect.play();
 		active  = true;
 		_wait = false;
 		_pointer.visible = true;
@@ -298,6 +300,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				{
 					// если удалось попасть, наносим врагу 1 урона и устанавливаем наш индикатор повреждения
 					_damages[1].text = "1";
+					_sndHurt.play();
 					_enemyHealth--;
 					// Изменяем панельздоровья противника
 					_enemyHealthBar.currentValue = (_enemyHealth / _enemyMaxHealth) * 100;
@@ -306,6 +309,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				{
 					// В тексте повреждений пишем "Промох"
 					_damages[1].text = "MISS!";
+					_sndMiss.play();
 				}
 				
 				// Поместите текстовый повреждения над врагом, и установите его в прозрачность в 0, а 
@@ -332,6 +336,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 					// Если удалось показываем сообщение "Сбежал!"
 					outcome = ESCAPE;
 					_results.text = "ESCAPED!";
+					_sndFled.play();
 					_results.visible = true;
 					_results.alpha = 0;
 					FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
@@ -359,12 +364,15 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			// Если враг попал сделать белую вспышку и отнять еденицу здоровья у игрока после чего обновить здоровье
 			FlxG.camera.flash(FlxColor.WHITE, .2);
 			_damages[0].text = "1";
+			_sndHurt.play();
 			playerHealth--;
 			updatePlayerHealth();
 		}
 		else
 		{
 			_damages[0].text = "MISS!";
+			_sndMiss.play();
+			_sndMiss.play();
 		}
 		
 		// Боевой текст появляется над игроком и поднимаясь вверх исчезает
@@ -425,6 +433,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			// Если здоровье игрока меньше 0, мы показываем сообщение о паражении и заставляем его исчезать
 			outcome = DEFEAT;
 			_results.text = "DEFEAT!";
+			_sndLose.play();
 			_results.visible = true;
 			_results.alpha = 0;
 			FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
@@ -434,6 +443,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			// Если здоровье врага меньше 0, мы показываем сообщение о победе и заставляем его исчезать
 			outcome = VICTORY;
 			_results.text = "VICTORY!";
+			_sndWin.play();
 			_results.visible = true;
 			_results.alpha = 0;
 			FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
@@ -454,12 +464,20 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		_sprBack = FlxDestroyUtil.destroy(_sprBack);
 		_sprPlayer = FlxDestroyUtil.destroy(_sprPlayer);
 		_sprEnemy = FlxDestroyUtil.destroy(_sprEnemy);
-		//_enemyHealthBar = FlxDestroyUtil.destroy(_enemyHealthBar);
+		_enemyHealthBar = null;// FlxDestroyUtil.destroy(_enemyHealthBar);
 		_txtPlayerHealth = FlxDestroyUtil.destroy(_txtPlayerHealth);
 		_damages = FlxDestroyUtil.destroyArray(_damages);
 		_pointer = FlxDestroyUtil.destroy(_pointer);
 		_choices = FlxDestroyUtil.destroyArray(_choices);
 		_results = FlxDestroyUtil.destroy(_results);
+		
+		_sndFled = FlxDestroyUtil.destroy(_sndFled);
+		_sndHurt = FlxDestroyUtil.destroy(_sndHurt);
+		_sndLose = FlxDestroyUtil.destroy(_sndLose);
+		_sndMiss = FlxDestroyUtil.destroy(_sndMiss);
+		_sndSelect = FlxDestroyUtil.destroy(_sndSelect);
+		_sndWin = FlxDestroyUtil.destroy(_sndWin);
+		_sndCombat = FlxDestroyUtil.destroy(_sndCombat);
 	}
 }
 

@@ -3,8 +3,10 @@ package ;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.system.FlxSound;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Класс игрока
@@ -16,6 +18,11 @@ class Player extends FlxSprite
 	 * Публичные переменные
 	 */
 	public var speed:Float = 200;
+	
+	/**
+	 * Приватные переменные
+	 */
+	private var _sndStep:FlxSound;
 	
 	/**
 	 * Конструктор класса Player с координатами
@@ -40,6 +47,9 @@ class Player extends FlxSprite
 		// Drag тормозит объект недаёт ему начать бесконечно двигаться 
 		drag.x = drag.y = 1600;
 		
+		// Звук шагов
+		_sndStep = FlxG.sound.load(AssetPaths.step__wav);
+		
 		width = 8;
 		height = 14;
 		offset.x = 4;
@@ -53,6 +63,8 @@ class Player extends FlxSprite
 	{
 		if (velocity.x != 0 || velocity.y != 0) //&& touching == FlxObject.NONE)
 			{
+				_sndStep.play();
+				
 				switch(facing)
 				{
 					case FlxObject.LEFT, FlxObject.RIGHT:
@@ -121,9 +133,7 @@ class Player extends FlxSprite
 			}
 			
 			// Что-то про угловую скорость плохо понят
-			FlxAngle.rotatePoint(speed, 0, 0, 0, mA, velocity);
-			
-			
+			FlxAngle.rotatePoint(speed, 0, 0, 0, mA, velocity);			
 		}
 	}
 	/**
@@ -133,6 +143,13 @@ class Player extends FlxSprite
 	{
 		movement();
 		super.update();
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		
+		_sndStep = FlxDestroyUtil.destroy(_sndStep);
 	}
 	
 }

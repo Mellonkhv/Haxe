@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
@@ -39,6 +40,7 @@ class PlayState extends FlxState
 	private var _combatHUD:CombatHUD;
 	private var _ending:Bool;
 	private var _won:Bool;
+	private var _sndCoin:FlxSound;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -78,6 +80,8 @@ class PlayState extends FlxState
 		_combatHUD = new CombatHUD();
 		add(_combatHUD);
 		
+		_sndCoin = FlxG.sound.load(AssetPaths.coin__wav);
+		
 		super.create();
 	}
 	
@@ -110,6 +114,8 @@ class PlayState extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
+		
+		_sndCoin = FlxDestroyUtil.destroy(_sndCoin);
 	}
 
 	/**
@@ -225,6 +231,7 @@ class PlayState extends FlxState
 	{
 		if ( P.alive && P.exists && C.alive && C.exists) // Если игрок и монетка соприкоснулись
 		{
+			_sndCoin.play(true);
 			_money ++; // считаем собраную монетку
 			_hud.updateHUD(_health, _money); // обновляем цифры
 			C.kill(); // монетка исчезает
