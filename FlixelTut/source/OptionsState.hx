@@ -24,6 +24,9 @@ class OptionsState extends FlxState
 	private var _btnVolumeUp:FlxButton;
 	private var _btnClearData:FlxButton;
 	private var _btnBack:FlxButton;
+	#if desktop
+	private var _btnFullScreen:FlxButton;
+	#end
 	
 	private var _save:FlxSave;
 	
@@ -62,6 +65,12 @@ class OptionsState extends FlxState
 		_txtVolumeAmt.screenCenter(true, false);
 		add(_txtVolumeAmt);
 		
+		#if desktop
+		_btnFullScreen = new FlxButton(0, _barVolume.y + _barVolume.height + 8, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullScreen);
+		_btnFullScreen.screenCenter(true, false);
+		add(_btnFullScreen);
+		#end
+		
 		_btnClearData = new FlxButton((FlxG.width / 2) - 90, FlxG.height - 28, "Clear Data", clickClearData);
 		_btnClearData.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnClearData);
@@ -78,6 +87,15 @@ class OptionsState extends FlxState
 		
 		super.create();
 	}
+	
+	#if desktop
+	private function clickFullScreen():Void
+	{
+		FlxG.fullscreen = !FlxG.fullscreen;
+		_btnFullScreen.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
+		_save.data.fullscreen = FlxG.fullscreen;
+	}
+	#end
 	
 	/**
 	 * Когда пользователь хочет очистить сохранённые данные
@@ -140,5 +158,9 @@ class OptionsState extends FlxState
 		_btnBack = FlxDestroyUtil.destroy(_btnBack);
 		_save.destroy();
 		_save = null;
+		
+		#if desktop
+		_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
+		#end
 	}
 }
