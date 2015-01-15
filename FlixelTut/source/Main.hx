@@ -83,6 +83,10 @@ class Main extends Sprite
 		}
 		_save.close();
 		
+		#if flash
 		FlxG.sound.playMusic(AssetPaths.HaxeFlixel_Tutorial_Game__mp3, .7, true);
+		#else
+		FlxG.sound.playMusic(AssetPaths.HaxeFlixel_Tutorial_Game__ogg, .7, true);
+		#end
 	}
 }

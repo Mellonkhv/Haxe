@@ -12,6 +12,7 @@ import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
+import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -41,6 +42,10 @@ class PlayState extends FlxState
 	private var _ending:Bool;
 	private var _won:Bool;
 	private var _sndCoin:FlxSound;
+	
+	#if mobile
+	public static var virtualPad:FlxVirtualPad;
+	#end
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -82,6 +87,11 @@ class PlayState extends FlxState
 		
 		_sndCoin = FlxG.sound.load(AssetPaths.coin__wav);
 		
+		#if mobile
+		virtualPad = new FlxVirtualPad(FULL, NONE);
+		add(virtualPad);
+		#end
+		
 		super.create();
 	}
 	
@@ -115,7 +125,16 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 		
+		_player = FlxDestroyUtil.destroy(_player);
+		_mWalls = FlxDestroyUtil.destroy(_mWalls);
+		_grpCoins = FlxDestroyUtil.destroy(_grpCoins);
+		_grpEnemies = FlxDestroyUtil.destroy(_grpEnemies);
+		_hud = FlxDestroyUtil.destroy(_hud);
+		_combatHUD = FlxDestroyUtil.destroy(_combatHUD);
 		_sndCoin = FlxDestroyUtil.destroy(_sndCoin);
+		#if mobile
+		virtualPad = FlxDestroyUtil.destroy(virtualPad);
+		#end
 	}
 
 	/**
@@ -165,6 +184,9 @@ class PlayState extends FlxState
 					{
 						_combatHUD.e.flicker();
 					}
+					#if mobile
+					virtualPad.visible = true;
+					#end
 					_inCombat = false;
 					_player.active = true;
 					_grpEnemies.active = true;
@@ -203,6 +225,10 @@ class PlayState extends FlxState
 		_player.active = false;
 		_grpEnemies.active = false;
 		_combatHUD.initCombat(_health, E);
+		
+		#if mobile
+		virtualPad.visible = false;
+		#end
 	}
 	
 	/**

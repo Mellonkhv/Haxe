@@ -1,5 +1,6 @@
 package;
 
+import flash.system.System;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;

@@ -234,6 +234,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	{
 		if (!_wait)
 		{
+			#if !FLX_NO_KEYBOARD
 			// Настройка нескольких простых флагов, чтобы увидеть, какие клавиши нажаты.
 			var _up:Bool = false;
 			var _down:Bool = false;
@@ -272,6 +273,32 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				else _selected++;
 				movePointer();
 			}
+			#end
+			#if !FLX_NO_TOUCH
+			var didSelect:Bool = false;
+			for (touch in FlxG.touches.justReleased()) 
+			{
+				if (!didSelect)
+				{
+					if (touch.overlaps(_choices[0]))
+					{
+						didSelect = true;
+						_sndSelect.play();
+						_selected = 0;
+						movePointer();
+						makeChoice();
+					}
+					else if (touch.overlaps(_choices[1]))
+					{
+						didSelect = true;
+						_sndSelect.play();
+						_selected = 1;
+						movePointer();
+						makeChoice();
+					}
+				}
+			}
+			#end
 			
 		}
 		super.update();
